@@ -1,2 +1,24 @@
 ---
+
 # defaults file for consul
+# default pathes and dirs
+consul_templates_dir: "{{ role_path }}/templates"
+consul_vars_dir: "{{ role_path }}/vars"
+consul_config_dir: "/etc/consul.d"
+consul_data_dir: "/var/lib/consul"
+consul_service_name: "consul"
+# APT-based variables
+consul_apt_packages:
+  - "consul"
+  - "python3-consul"
+# Configuration variables
+consul_params_default:
+  - name: "datacenter"
+    value: '"global"'
+  - name: "data_dir"
+    value: '"/var/lib/consul"'
+  - name: "domain"
+    value: '"{{ common_domain_name }}"'
+  - name: "server"
+    value: 'true'
+

@@ -1,2 +1,34 @@
 ---
+
 # handlers file for consul
+
+- name: enable consul
+  ansible.builtin.service:
+    name: consul
+    enabled: true
+
+- name: disable consul
+  ansible.builtin.service:
+    name: consul
+    enabled: false
+
+- name: start consul
+  ansible.builtin.service:
+    name: consul
+    state: started
+
+- name: stop consul
+  ansible.builtin.service:
+    name: consul
+    state: stopped
+
+- name: restart consul
+  ansible.builtin.service:
+    name: consul
+    state: restarted
+
+- name: reload consul
+  ansible.builtin.service:
+    name: consul
+    state: reloaded
+

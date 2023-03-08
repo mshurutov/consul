@@ -1,0 +1,32 @@
+# File {{ consul_config_dir }}/consul-config.hcl managed by ansible.
+# You should not edit it manually.
+
+{% for param in consul_params %}
+{% if param.subkeys is defined %}
+{{ param.name }} {
+{% for opts in param.subkeys %}
+{% if opts.params is defined %}
+  {{ opts.name }} {
+{% for opt in opts.params %}
+    {{ opt.name }} = {{ opt.value }}
+{% endfor %}
+  }
+{% else %}
+  {{ opts.name }} = {{ opts.value }}
+{% endif %}
+{% endfor %}
+}
+{% else %}
+{{ param.name }} = {{ param.value }}
+{% endif %}
+{% endfor %}
+{% if consul_hosts_group is defined %}
+retry_join = [
+{% for host in groups[consul_hosts_group] %}
+  "{{ hostvars[host]['common_ip4_default'] }}"{% if not loop.last %},{% endif +%}
+{% endfor +%}
+]
+{% else %}
+retry_join = ["{{ common_ip4_default }}"]
+{% endif %}
+
