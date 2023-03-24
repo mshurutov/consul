@@ -12,11 +12,12 @@ consul_apt_packages:
   - "consul"
   - "python3-consul"
 # Configuration variables
+consul_http_client_port: "8500"
 consul_params_default:
   - name: "datacenter"
     value: '"global"'
   - name: "data_dir"
-    value: '"/var/lib/consul"'
+    value: '"{{ consul_data_dir }}"'
   - name: "domain"
     value: '"{{ common_domain_name }}"'
   - name: "server"

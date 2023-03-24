@@ -1,6 +1,9 @@
 # File {{ consul_config_dir }}/consul-config.hcl managed by ansible.
 # You should not edit it manually.
 
+addresses {
+  http = "{{ common_ip4_default }}"
+}
 {% for param in consul_params %}
 {% if param.subkeys is defined %}
 {{ param.name }} {
