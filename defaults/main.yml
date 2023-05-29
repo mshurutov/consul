@@ -22,4 +22,3 @@ consul_params_default:
     value: '"{{ common_domain_name }}"'
   - name: "server"
     value: 'true'
-

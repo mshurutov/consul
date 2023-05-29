@@ -31,4 +31,3 @@
   ansible.builtin.service:
     name: consul
     state: reloaded
-

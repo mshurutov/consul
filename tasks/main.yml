@@ -49,4 +49,3 @@
     - "{{ consul_templates_dir }}/*.j2"
   notify: restart consul
   tags: consul,consul_config
-
