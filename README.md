@@ -23,27 +23,81 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 Requirements
 ------------
-
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+This role requires python v3 because python v2 is out of live.
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+### System variables
+`consul_templates_dir` is directory for role templates;
+`consul_vars_dir` is directory for define role variables;
+`consul_config_dir` is directory for configs;
+`consul_data_dir` is directory for data;
+`consul_service_name` is consul service name.
+
+### Package variables
+`consul_{{ ansible_package_manager }}_packages` is list of necessary packages;
+
+### Configuration variables
+`consul_http_client_port` is port for client connections;
+`consul_params_default`: by default there are defined "`datacenter`", "`data_dir`", "`domain`", "`server`".
+
+Using a Role
+----------------
+
+### Variables Used
+
+* `ANSIBLE_ROOT_DIR` is path for static content: roles,configs,etc, for example: /data/ansible
+* `ANSIBLE_ROOT_ROLE_DIR` is path in `roles_path` config variable, for example: /data/ansible/roles  
+Content of my ~/.ansible.cfg:
+```
+...
+# additional paths to search for roles in, colon separated
+#roles_path    = /etc/ansible/roles
+roles_path    = /data/ansible/roles
+...
+```
+
+### Install role
+#### GIT repo
+
+    user@host ~ $ cd $ANSIBLE_ROOT_ROLE_DIR
+    user@host roles $ git clone https://shurutov@git.code.sf.net/p/consul-role/code consul
+
+#### Ansible galaxy
+##### Installation from command
+
+    user@host ~ $ cd $ANSIBLE_ROOT_DIR
+    user@host ansible $ ansible-galaxy role install mshurutov.consul -p roles
+
+##### Installation from requirements.yml
+
+    user@host ~ $ cd $ANSIBLE_ROOT_DIR
+    user@host ansible $ grep consul requirements.yml
+    - name: mshurutov.consul
+    user@host ansible $ ansible-galaxy role install -r requirements.yml -p roles
+
+### Example Playbook
+
+#### Role installed as git repo
+
+    ...
+    - hosts: all
+      roles:
+         - role: consul
+    ...
+
+#### Role installed by ansible-galaxy
+
+    ...
+    - hosts: all
+      roles:
+         - role: mshurutov.consul
+    ...
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
-
-Example Playbook
-----------------
-
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
-
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
 
 License
 -------
@@ -53,4 +107,4 @@ License
 Author Information
 ------------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+My name is Mikhail Shurutov, I'm an operations engineer since 1997.
