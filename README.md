@@ -82,7 +82,7 @@ roles_path    = /data/ansible/roles
 #### Role installed as git repo
 
     ...
-    - hosts: all
+    - hosts: consul_group
       roles:
          - role: consul
     ...
@@ -90,7 +90,7 @@ roles_path    = /data/ansible/roles
 #### Role installed by ansible-galaxy
 
     ...
-    - hosts: all
+    - hosts: consul_group
       roles:
          - role: mshurutov.consul
     ...
