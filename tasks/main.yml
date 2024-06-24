@@ -1,14 +1,13 @@
 ---
-
 # tasks file for consul
-- name: set parameters
-  set_fact:
-    consul_params: "{{ [consul_params_default,consul_params_group_all | default([]),consul_params_group | default([])] | community.general.lists_mergeby('name',recursive=True,list_merge='append_rp') }}"
-  tags: consul,consul_config
+- name: set distro independed variables
+  ansible.builtin.include_vars:
+    file: "{{ consul_vars_dir }}/main.yml"
+  tags: consul,consul_init,consul_install,consul_config
 
 - name: install packages
   ansible.builtin.include_tasks: "{{ ansible_pkg_mgr }}.yml"
-  tags: consul,consul_init
+  tags: consul,consul_install
 
 - name: clean config and data directories
   block:
