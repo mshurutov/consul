@@ -1,7 +1,6 @@
 --- 
-
 # install consul for Debian-based distros
-- name: install consul by apt
+- name: Install consul by apt
   ansible.builtin.apt:
     pkg: "{{ consul_apt_packages }}"
     state: present

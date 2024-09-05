@@ -1,32 +1,42 @@
 ---
+- name: Check if ansible version is equal or greater than 2.11
+  ansible.builtin.fail:
+    msg: "Ansible core should be equal or greater than 2.11"
+  when: ansible_version.full is ansible.builtin.version('2.11','<')
+
+- name: Check if python is equal or greater than 3
+  ansible.builtin.fail:
+    msg: "Python should be equal or greater than 3"
+  when: ansible_python.version.major is ansible.builtin.version('3','<')
+
 # tasks file for consul
-- name: set distro independed variables
+- name: Set distro independed variables
   ansible.builtin.include_vars:
     file: "{{ consul_vars_dir }}/main.yml"
   tags: consul,consul_init,consul_install,consul_config
 
-- name: install packages
+- name: Install packages
   ansible.builtin.include_tasks: "{{ ansible_pkg_mgr }}.yml"
   tags: consul,consul_install
 
-- name: clean config and data directories
+- name: Clean config and data directories
   block:
-    - name: check if consul is stopped
+    - name: Check if consul is stopped
       ansible.builtin.service:
         name: "{{ consul_service_name }}"
         state: stopped
-    - name: clean config dir
+    - name: Clean config dir
       ansible.builtin.file:
         path: "{{ item}"
         state: absent
       with_fileglob:
         - "{{ consul_config_dir }}/*"
         - "{{ consul_data_dir }}/*"
-    - name: generate consul token for encryption
+    - name: Generate consul token for encryption
       ansible.builtin.command: consul keygen
       register: consul_enc_key
       run_once: true
-    - name: put consul token into permanent store
+    - name: Put consul token into permanent store
       ansible.builtin.copy:
         content: "{{ consul_enc_key.stdout }}"
         dest: "{{ common_local_store }}/consul-{{ common_domain_name }}.key"
@@ -35,12 +45,12 @@
   tags: consul,consul_init
   when: consul_init_force is defined and consul_init_force | bool
 
-- name: set consul_enc_key variable
+- name: Set consul_enc_key variable
   set_fact:
     consul_enc_key: "{{ lookup('file', common_local_store + '/consul-' + common_domain_name + '.key') }}"
   tags: consul,consul_config
 
-- name: create configs
+- name: Create configs
   ansible.builtin.template:
     src: "{{ item }}"
     dest: "{{ consul_config_dir }}/{{ item | basename | regex_replace('.j2') }}"
