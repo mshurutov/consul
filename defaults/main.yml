@@ -1,5 +1,4 @@
 ---
-
 # defaults file for consul
 # default pathes and dirs
 consul_templates_dir: "{{ role_path }}/templates"

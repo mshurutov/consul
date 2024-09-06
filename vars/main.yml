@@ -1,11 +1,10 @@
 ---
 # vars file for consul
 consul_params: "{{
-  [ consul_params_default,
+  [consul_params_default,
     consul_params_group_all | default([]),
     consul_params_supgroup | default([]),
     consul_params_group | default([]),
-    consul_params_subgroup | default([])
-  ] |
-  community.general.lists_mergeby('name',recursive=True,list_merge='append_rp')
+    consul_params_subgroup | default([])] |
+  community.general.lists_mergeby('name', recursive=True, list_merge='append_rp')
 }}"

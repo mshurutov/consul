@@ -20,6 +20,8 @@
   tags: consul,consul_install
 
 - name: Clean config and data directories
+  tags: consul,consul_init
+  when: consul_init_force is defined and consul_init_force | bool
   block:
     - name: Check if consul is stopped
       ansible.builtin.service:
@@ -27,7 +29,7 @@
         state: stopped
     - name: Clean config dir
       ansible.builtin.file:
-        path: "{{ item}"
+        path: "{{ item }}"
         state: absent
       with_fileglob:
         - "{{ consul_config_dir }}/*"
@@ -35,18 +37,18 @@
     - name: Generate consul token for encryption
       ansible.builtin.command: consul keygen
       register: consul_enc_key
+      changed_when: true
       run_once: true
     - name: Put consul token into permanent store
       ansible.builtin.copy:
         content: "{{ consul_enc_key.stdout }}"
         dest: "{{ common_local_store }}/consul-{{ common_domain_name }}.key"
+        mode: "0644"
       when: consul_enc_key is defined and consul_enc_key.stdout != ""
       delegate_to: 127.0.0.1
-  tags: consul,consul_init
-  when: consul_init_force is defined and consul_init_force | bool
 
 - name: Set consul_enc_key variable
-  set_fact:
+  ansible.builtin.set_fact:
     consul_enc_key: "{{ lookup('file', common_local_store + '/consul-' + common_domain_name + '.key') }}"
   tags: consul,consul_config
 
@@ -54,6 +56,7 @@
   ansible.builtin.template:
     src: "{{ item }}"
     dest: "{{ consul_config_dir }}/{{ item | basename | regex_replace('.j2') }}"
+    mode: "0644"
   with_fileglob:
     - "{{ consul_templates_dir }}/*.j2"
   notify: restart consul

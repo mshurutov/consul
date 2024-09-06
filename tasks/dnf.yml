@@ -4,4 +4,4 @@
   ansible.builtin.uri:
     url: 'https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo'
     creates: '/etc/yum.repos.d/hashicorp.repo'
-    tags: consul_dnf_init
+  tags: consul_dnf_init
